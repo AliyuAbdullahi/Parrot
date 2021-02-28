@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Parrot">
         <activity android:name=".notification.router.NotificationRouter"/>
-        <activity android:name=".newevents.MainActivity">
+        <activity android:name=".newevents.CreateEventActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
