@@ -3,7 +3,7 @@ package com.lek.parrot.notification.router
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.lek.parrot.newevents.MainActivity
+import com.lek.parrot.newevents.CreateEventActivity
 import com.lek.parrot.notification.NOTIFICATION_TARGET
 
 class NotificationRouter : AppCompatActivity() {
@@ -16,7 +16,7 @@ class NotificationRouter : AppCompatActivity() {
         intent?.extras?.let {
             if (it.containsKey(NOTIFICATION_TARGET)) {
                 if (it[NOTIFICATION_TARGET] == "MainActivity") {
-                    startActivity(Intent(this, MainActivity::class.java))
+                    startActivity(Intent(this, CreateEventActivity::class.java))
                 }
             }
         } ?: super.onNewIntent(intent)
