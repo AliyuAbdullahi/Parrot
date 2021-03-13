@@ -1,5 +1,6 @@
 package com.lek.parrot.core
 
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
@@ -10,13 +11,13 @@ abstract class BasePresenter<View> : ViewModel(), LifecycleObserver {
     private var viewRef: WeakReference<View>? = null
     private var viewLifecycleRef: WeakReference<Lifecycle>? = null
 
-    fun attachToView(view: View, lifecycle: Lifecycle) {
+    val view by lazy { viewRef?.get() ?: throw Error("View is null in ${BasePresenter::class.java.name}") }
+
+    fun attachToView(view: View, host: AppCompatActivity) {
         this.viewRef = WeakReference(view)
-        this.viewLifecycleRef = WeakReference(lifecycle)
+        this.viewLifecycleRef = WeakReference(host.lifecycle)
         viewLifecycleRef?.get()?.addObserver(this)
     }
-
-    fun view(): View? = viewRef?.get()
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     open fun onStart() {
