@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Parrot</string>
+    <string name="receiver_name_hint">Name</string>
+    <string name="phone_number">Phone number</string>
+    <string name="time_hint">time</string>
+    <string name="later_date_hint">…later date…</string>
+    <string name="add_event">Add Event</string>
+    <string name="message">Message...</string>
+    <string name="invalid_time">Invalid Time</string>
+    <string name="invalid_month">Invalid Month</string>
+    <string name="invalid_year">Invalid Year</string>
+    <string name="enter_event_time">Enter event time</string>
+    <string name="enter_event_message">Enter event message</string>
+    <string name="enter_receiver">Enter a receiver</string>
+    <string name="enter_valid_date">Select valid date</string>
+    <string name="error_occurred">Unknown Error Occurred</string>
 </resources>

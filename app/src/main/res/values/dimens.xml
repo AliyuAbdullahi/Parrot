@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="standardMargin" type="dimen">16dp</item>
+    <item name="bodyTextSize" type="dimen">14sp</item>
+    <item name="titleTextSize" type="dimen">20sp</item>
+    <item name="subTitleTextSize" type="dimen">16sp</item>
+    <dimen name="standardElevation">8dp</dimen>
+</resources>

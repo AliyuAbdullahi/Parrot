@@ -3,7 +3,7 @@ package com.lek.parrot.notification.router
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.lek.parrot.newevents.CreateEventActivity
+import com.lek.parrot.newevents.ui.CreateEventActivity
 import com.lek.parrot.notification.NOTIFICATION_TARGET
 
 class NotificationRouter : AppCompatActivity() {

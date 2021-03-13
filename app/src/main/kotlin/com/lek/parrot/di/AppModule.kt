@@ -1,4 +1,4 @@
-package com.lek.parrot.newevents.di
+package com.lek.parrot.di
 
 import android.content.Context
 import androidx.room.Room
@@ -6,8 +6,11 @@ import com.lek.parrot.data.db.DB_NAME
 import com.lek.parrot.data.db.ParrotDb
 import com.lek.parrot.data.DataEventToDomainEventMapper
 import com.lek.parrot.data.EventDao
-import com.lek.parrot.data.EventRepository
+import com.lek.parrot.newevents.data.EventRepository
 import com.lek.parrot.newevents.domain.IEventRepository
+import com.lek.parrot.shared.CreateEventInteractor
+import com.lek.parrot.shared.IStringService
+import com.lek.parrot.shared.StringService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,4 +34,11 @@ object AppModule {
     @Singleton
     @Provides
     fun provideEventRepository(dao: EventDao): IEventRepository = EventRepository(dao, DataEventToDomainEventMapper)
+
+    @Provides
+    fun provideCreateEventInteractor(repository: IEventRepository) = CreateEventInteractor(repository)
+
+    @Singleton
+    @Provides
+    fun provideStringService(@ApplicationContext context: Context): IStringService = StringService(context)
 }
