@@ -2,7 +2,7 @@ package com.lek.parrot.data
 
 import com.lek.parrot.mockDataEvent
 import com.lek.parrot.mockEvent
-import com.lek.parrot.newevents.domain.Event
+import com.lek.parrot.shared.Event
 import org.junit.jupiter.api.Test
 
 internal class DataEventToDomainEventMapperTest {

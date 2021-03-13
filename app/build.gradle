@@ -23,6 +23,10 @@ android {
         testInstrumentationRunnerArgument "runnerBuilder", "de.mannodermaus.junit5.AndroidJUnit5Builder"
     }
 
+    buildFeatures {
+        viewBinding true
+    }
+
     testOptions {
         unitTests.all {
             useJUnitPlatform()
@@ -76,6 +80,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$viewmodel_lifecycle"
 
     // For instrumentation tests
     androidTestImplementation "com.google.dagger:hilt-android-testing:$daggerhilt_version"
@@ -103,7 +108,16 @@ dependencies {
     androidTestImplementation "androidx.test:rules:$androidx_runner_version"
 
     // ---- Logger ---- //
+
     implementation "com.jakewharton.timber:timber:$timber_version"
+
+    // ---- Mockk ----- //
+    testImplementation "io.mockk:mockk:$mockk_version"
+    androidTestImplementation "io.mockk:mockk-android:$mockk_version"
+
+    // ----- FlowBinding ----- //
+
+    implementation "io.github.reactivecircus.flowbinding:flowbinding-android:$flowbinding_version"
 }
 
 kapt {

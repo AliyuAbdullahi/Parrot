@@ -2,7 +2,7 @@ package com.lek.parrot
 
 import com.lek.parrot.data.DataEvent
 import com.lek.parrot.data.EventType
-import com.lek.parrot.newevents.domain.Event
+import com.lek.parrot.shared.Event
 
 fun mockDataEvent() = DataEvent(
     "testId",
