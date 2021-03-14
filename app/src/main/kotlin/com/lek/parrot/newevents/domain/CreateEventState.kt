@@ -27,13 +27,7 @@ sealed class CreateEventState {
         val name: String = "",
         val phoneNumber: String = "",
         val message: String = ""
-    ) : CreateEventState() {
-        fun updateHour(hour: Int) = copy(hour = hour)
-        fun updateMinute(minute: Int) = copy(minute = minute)
-        fun updateYear(year: Int) = copy(year = year)
-        fun updateDayOfMonth(dayOfMonth: Int) = copy(dayOfMonth = dayOfMonth)
-        fun updateMonth(month: Int) = copy(month = month)
-    }
+    ) : CreateEventState()
 }
 
 fun CreateEventState.validate(): CreateEventState {
