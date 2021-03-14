@@ -18,7 +18,6 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import reactivecircus.flowbinding.android.view.clicks
 import reactivecircus.flowbinding.android.widget.textChanges
-import reactivecircus.flowbinding.common.InitialValueFlow
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -44,8 +43,7 @@ class CreateMessageEventView @JvmOverloads constructor(
         )
     }
 
-    override fun receiverNumber(): InitialValueFlow<CharSequence> =
-        binding.receiverNumber.textChanges()
+    override fun receiverNumber(): Flow<CharSequence> = binding.receiverNumber.textChanges().skipInitialValue()
 
     override fun date(): Flow<Unit> = binding.eventDate.clicks()
 
@@ -94,11 +92,11 @@ class CreateMessageEventView @JvmOverloads constructor(
         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
     }
 
-    override fun phoneNumber(): InitialValueFlow<CharSequence> = binding.receiverNumber.textChanges()
+    override fun phoneNumber(): Flow<CharSequence> = binding.receiverNumber.textChanges().skipInitialValue()
 
-    override fun receiverName(): InitialValueFlow<CharSequence> = binding.receiverName.textChanges()
+    override fun receiverName(): Flow<CharSequence> = binding.receiverName.textChanges().skipInitialValue()
 
-    override fun message(): InitialValueFlow<CharSequence> = binding.eventMessage.textChanges()
+    override fun message(): Flow<CharSequence> = binding.eventMessage.textChanges().skipInitialValue()
 
     override fun showSuccessMessage() {
         Toast.makeText(context, "You have successfully added an event", Toast.LENGTH_SHORT).show()

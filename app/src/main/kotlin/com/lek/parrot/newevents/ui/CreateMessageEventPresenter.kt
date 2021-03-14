@@ -44,8 +44,7 @@ class CreateMessageEventPresenter(
     private fun observePhoneNumber() = viewModelScope.launch {
         view.phoneNumber().handleError().collect {
             (it as CharSequence).let { phoneNumber ->
-                eventState =
-                    (eventState as CreateEventState.MessageEvent).copy(phoneNumber = phoneNumber.toString())
+                eventState = (eventState as CreateEventState.MessageEvent).copy(phoneNumber = phoneNumber.toString())
             }
         }
     }
@@ -53,8 +52,7 @@ class CreateMessageEventPresenter(
     private fun observeName() = viewModelScope.launch {
         view.receiverName().handleError().collect {
             (it as CharSequence).let { name ->
-                eventState =
-                    (eventState as CreateEventState.MessageEvent).copy(name = name.toString())
+                eventState = (eventState as CreateEventState.MessageEvent).copy(name = name.toString())
             }
         }
     }
@@ -62,8 +60,7 @@ class CreateMessageEventPresenter(
     private fun observeMessage() = viewModelScope.launch {
         view.message().handleError().collect {
             (it as CharSequence).let { message ->
-                eventState =
-                    (eventState as CreateEventState.MessageEvent).copy(message = message.toString())
+                eventState = (eventState as CreateEventState.MessageEvent).copy(message = message.toString())
             }
         }
     }
@@ -81,15 +78,12 @@ class CreateMessageEventPresenter(
             }
             .collect {
                 when (val result = eventState.validate()) {
+                    CreateEventState.InvalidEventState -> view.showError(stringService.getString(R.string.error_create_event))
                     CreateEventState.InvalidTime -> view.showError(stringService.getString(R.string.invalid_time))
                     CreateEventState.InvalidMonth -> view.showError(stringService.getString(R.string.invalid_month))
                     CreateEventState.InvalidYear -> view.showError(stringService.getString(R.string.invalid_year))
                     CreateEventState.EmptyTime -> view.showError(stringService.getString(R.string.enter_event_time))
-                    CreateEventState.EmptyMessage -> view.showAddMessageError(
-                        stringService.getString(
-                            R.string.enter_event_message
-                        )
-                    )
+                    CreateEventState.EmptyMessage -> view.showAddMessageError(stringService.getString(R.string.enter_event_message))
                     CreateEventState.EmptyReceiver -> view.showError(stringService.getString(R.string.enter_receiver))
                     CreateEventState.InvalidDay -> view.showError(stringService.getString(R.string.enter_valid_date))
 
@@ -122,8 +116,7 @@ class CreateMessageEventPresenter(
     }
 
     override fun onTimeSet(hourOfDay: Int, minute: Int) {
-        eventState =
-            (eventState as CreateEventState.MessageEvent).copy(hour = hourOfDay, minute = minute)
+        eventState = (eventState as CreateEventState.MessageEvent).copy(hour = hourOfDay, minute = minute)
     }
 
     override fun onDateSet(year: Int, month: Int, dayOfMonth: Int) {

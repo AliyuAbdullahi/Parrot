@@ -1,12 +1,11 @@
 package com.lek.parrot.core
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 
 abstract class Interactor<Params, ReturnType>(
-    private val dispatcher: CoroutineDispatcher = Dispatchers.Main
+    private val dispatcher: CoroutineDispatcher
 ) {
     protected abstract fun run(params: Params): Flow<ReturnType>
 

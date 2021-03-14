@@ -1,7 +1,6 @@
 package com.lek.parrot.newevents.ui
 
 import kotlinx.coroutines.flow.Flow
-import reactivecircus.flowbinding.common.InitialValueFlow
 
 interface CreateMessageEventContract {
     interface Presenter {
@@ -10,7 +9,7 @@ interface CreateMessageEventContract {
     }
 
     interface View {
-        fun receiverNumber(): InitialValueFlow<CharSequence>
+        fun receiverNumber(): Flow<CharSequence>
         fun date(): Flow<Unit>
         fun time(): Flow<Unit>
         fun onAddEventClicked(): Flow<Unit>
@@ -22,9 +21,9 @@ interface CreateMessageEventContract {
         fun showTimePicker()
         fun showAddMessageError(s: String)
         fun showError(errorMessage: String)
-        fun phoneNumber(): InitialValueFlow<CharSequence>
-        fun receiverName(): InitialValueFlow<CharSequence>
-        fun message(): InitialValueFlow<CharSequence>
+        fun phoneNumber(): Flow<CharSequence>
+        fun receiverName(): Flow<CharSequence>
+        fun message(): Flow<CharSequence>
         fun showSuccessMessage()
     }
 }

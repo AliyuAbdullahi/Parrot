@@ -16,6 +16,8 @@ buildscript {
     ext.flowbinding_version = '1.0.0'
     ext.mockk_version = '1.10.6'
     ext.viewmodel_lifecycle = '2.3.0'
+    ext.coroutines_test_version = '1.4.2'
+    ext.flow_turbine_version = '0.3.0'
 
     repositories {
         google()

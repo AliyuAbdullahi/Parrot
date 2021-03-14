@@ -17,6 +17,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+import kotlinx.coroutines.Dispatchers
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -36,7 +37,7 @@ object AppModule {
     fun provideEventRepository(dao: EventDao): IEventRepository = EventRepository(dao, DataEventToDomainEventMapper)
 
     @Provides
-    fun provideCreateEventInteractor(repository: IEventRepository) = CreateEventInteractor(repository)
+    fun provideCreateEventInteractor(repository: IEventRepository) = CreateEventInteractor(repository, Dispatchers.Main)
 
     @Singleton
     @Provides

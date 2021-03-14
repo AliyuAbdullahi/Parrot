@@ -14,4 +14,5 @@
     <string name="enter_receiver">Enter a receiver</string>
     <string name="enter_valid_date">Select valid date</string>
     <string name="error_occurred">Unknown Error Occurred</string>
+    <string name="error_create_event">Error managing state</string>
 </resources>

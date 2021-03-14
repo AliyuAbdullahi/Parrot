@@ -9,8 +9,6 @@ typealias Hour = Int
 
 sealed class CreateEventState {
 
-    data class EmptyNameOrNumber(val message: String) : CreateEventState()
-
     object InvalidTime : CreateEventState()
     object InvalidMonth : CreateEventState()
     object EmptyTime : CreateEventState()
@@ -18,6 +16,7 @@ sealed class CreateEventState {
     object InvalidDay : CreateEventState()
     object EmptyMessage : CreateEventState()
     object EmptyReceiver : CreateEventState()
+    object InvalidEventState : CreateEventState()
 
     data class MessageEvent(
         val hour: Hour = ABSENT_VALUE,
@@ -38,8 +37,19 @@ sealed class CreateEventState {
 }
 
 fun CreateEventState.validate(): CreateEventState {
+
     if (this !is CreateEventState.MessageEvent) {
-        throw Error("Invalid State")
+        return CreateEventState.InvalidEventState
+    }
+
+    if (year > DateUtil.currentYear()) {
+        return CreateEventState.MessageEvent(
+            hour,
+            minute,
+            year,
+            month,
+            dayOfMonth
+        )
     }
     if (hour.isAbsent() || minute.isAbsent()) {
         return CreateEventState.EmptyTime
@@ -49,12 +59,12 @@ fun CreateEventState.validate(): CreateEventState {
         return CreateEventState.InvalidMonth
     }
 
-    if (!year.isAbsent() && year < DateUtil.currentYear()) {
-        return CreateEventState.InvalidYear
-    }
-
     if (!year.isAbsent() && month.isAbsent()) {
         return CreateEventState.InvalidMonth
+    }
+
+    if (!year.isAbsent() && year < DateUtil.currentYear()) {
+        return CreateEventState.InvalidYear
     }
 
     if (year.isAbsent() && month == DateUtil.currentMonth() && dayOfMonth < DateUtil.currentDay()) {
@@ -78,7 +88,7 @@ fun CreateEventState.validate(): CreateEventState {
         return CreateEventState.InvalidTime
     }
 
-    if (message.isEmpty()) {
+    if (message.isBlank()) {
         return CreateEventState.EmptyMessage
     }
 
