@@ -2,7 +2,8 @@ package com.lek.parrot.data
 
 import com.lek.parrot.mockDataEvent
 import com.lek.parrot.mockEvent
-import com.lek.parrot.newevents.domain.Event
+import com.lek.parrot.newevents.data.EventRepository
+import com.lek.parrot.shared.Event
 import com.lek.parrot.newevents.domain.IEventRepository
 import io.mockk.coEvery
 import io.mockk.coVerify

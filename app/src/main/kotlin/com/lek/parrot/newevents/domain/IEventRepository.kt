@@ -1,5 +1,6 @@
 package com.lek.parrot.newevents.domain
 
+import com.lek.parrot.shared.Event
 import kotlinx.coroutines.flow.Flow
 
 interface IEventRepository {

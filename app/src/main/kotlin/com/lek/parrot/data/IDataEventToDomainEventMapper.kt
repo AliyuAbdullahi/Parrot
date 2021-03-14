@@ -1,6 +1,6 @@
 package com.lek.parrot.data
 
-import com.lek.parrot.newevents.domain.Event
+import com.lek.parrot.shared.Event
 
 interface IDataEventToDomainEventMapper {
     fun mapDataEventToEvent(dataEvent: DataEvent): Event

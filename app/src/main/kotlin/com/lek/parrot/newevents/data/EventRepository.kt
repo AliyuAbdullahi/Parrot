@@ -1,6 +1,8 @@
-package com.lek.parrot.data
+package com.lek.parrot.newevents.data
 
-import com.lek.parrot.newevents.domain.Event
+import com.lek.parrot.data.EventDao
+import com.lek.parrot.data.IDataEventToDomainEventMapper
+import com.lek.parrot.shared.Event
 import com.lek.parrot.newevents.domain.IEventRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
