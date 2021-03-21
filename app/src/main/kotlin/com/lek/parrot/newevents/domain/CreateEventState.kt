@@ -21,9 +21,9 @@ sealed class CreateEventState {
     data class MessageEvent(
         val hour: Hour = ABSENT_VALUE,
         val minute: Minute = ABSENT_VALUE,
-        val year: Year = ABSENT_VALUE,
-        val month: Month = ABSENT_VALUE,
-        val dayOfMonth: DayOfMonth = ABSENT_VALUE,
+        val year: Year = DateUtil.currentYear(),
+        val month: Month = DateUtil.currentMonth(),
+        val dayOfMonth: DayOfMonth = DateUtil.currentDay(),
         val name: String = "",
         val phoneNumber: String = "",
         val message: String = ""
@@ -95,7 +95,10 @@ fun CreateEventState.validate(): CreateEventState {
         minute,
         year,
         month,
-        dayOfMonth
+        dayOfMonth,
+        name,
+        phoneNumber,
+        message
     )
 }
 
