@@ -17,6 +17,5 @@ object NewEventModule {
     fun provideCreateEventPresenter(
         interactor: CreateEventInteractor,
         stringService: IStringService
-    ): CreateMessageEventContract.Presenter =
-        CreateMessageEventPresenter(interactor, stringService)
+    ): CreateMessageEventContract.Presenter = CreateMessageEventPresenter(interactor, stringService)
 }

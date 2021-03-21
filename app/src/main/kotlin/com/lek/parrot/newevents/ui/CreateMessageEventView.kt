@@ -9,7 +9,10 @@ import android.widget.DatePicker
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.work.Data
+import com.lek.parrot.R
 import com.lek.parrot.databinding.ViewCreateEventBinding
+import com.lek.parrot.notification.NotificationScheduler
 import com.lek.parrot.shared.DatePickerDialogStarter
 import com.lek.parrot.shared.TimePickerDialogStarter
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,11 +38,13 @@ class CreateMessageEventView @JvmOverloads constructor(
 
     private val binding = ViewCreateEventBinding.inflate(LayoutInflater.from(context), this, true)
 
+    private val activity: CreateEventActivity get() = context as CreateEventActivity
+
     override fun onFinishInflate() {
         super.onFinishInflate()
         (presenter as CreateMessageEventPresenter).attachToView(
             this,
-            context as CreateEventActivity
+            activity
         )
     }
 
@@ -59,12 +64,12 @@ class CreateMessageEventView @JvmOverloads constructor(
         binding.receiverNumber.apply { setText(number) }
     }
 
-    override fun setDate(date: String) {
-        binding.eventDate.text = date
+    override fun setDate(day: Int, month: Int, year: Int) {
+        binding.eventDate.text = context.getString(R.string.date, day, month, year)
     }
 
-    override fun setTime(time: String) {
-        binding.eventTime.text = time
+    override fun setTime(hour: Int, minute: Int) {
+        binding.eventTime.text = context.getString(R.string.hour_minute, hour, minute)
     }
 
     override fun showDatePickerDialog() {
@@ -100,5 +105,13 @@ class CreateMessageEventView @JvmOverloads constructor(
 
     override fun showSuccessMessage() {
         Toast.makeText(context, "You have successfully added an event", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun scheduleNotification(data: Data, delay: Long) {
+        NotificationScheduler.scheduleNotification(context, data, delay)
+    }
+
+    override fun onBack() {
+        activity.onBackPressed()
     }
 }

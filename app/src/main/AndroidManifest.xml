@@ -3,21 +3,23 @@
     package="com.lek.parrot">
 
     <application
+        android:name=".ParrotApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:name=".ParrotApp"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Parrot">
-        <activity android:name=".notification.router.NotificationRouter"/>
-        <activity android:name=".newevents.ui.CreateEventActivity">
+        <activity android:name=".events.ui.UpcomingEventsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
+        <activity android:name=".notification.router.NotificationRouter" />
+        <activity android:name=".newevents.ui.CreateEventActivity">
 
+        </activity>
+    </application>
 </manifest>

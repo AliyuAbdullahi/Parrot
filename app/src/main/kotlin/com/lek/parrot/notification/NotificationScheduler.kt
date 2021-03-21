@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 
 object NotificationScheduler {
 
-    fun scheduleNotification(context: Context, inputData: Data, delay: Long = 5000) {
+    fun scheduleNotification(context: Context, inputData: Data, delay: Long) {
         val notificationWork = OneTimeWorkRequest.Builder(NotificationWorker::class.java)
             .setInitialDelay(delay, TimeUnit.MILLISECONDS)
             .setInputData(inputData)

@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <item name="smallPadding" type="dimen">4dp</item>
+    <item name="standardPadding" type="dimen">8dp</item>
+    <item name="smallMargin" type="dimen">8dp</item>
+    <item name="tinyMargin" type="dimen">4dp</item>
     <item name="standardMargin" type="dimen">16dp</item>
     <item name="bodyTextSize" type="dimen">14sp</item>
+    <item name="smallText" type="dimen">12sp</item>
     <item name="titleTextSize" type="dimen">20sp</item>
+    <item name="titleLarge" type="dimen">24sp</item>
     <item name="subTitleTextSize" type="dimen">16sp</item>
     <dimen name="standardElevation">8dp</dimen>
+    <dimen name="miniElevation">4dp</dimen>
+    <dimen name="tinyDp">0.5dp</dimen>
+    <dimen name="cell_height">120dp</dimen>
 </resources>

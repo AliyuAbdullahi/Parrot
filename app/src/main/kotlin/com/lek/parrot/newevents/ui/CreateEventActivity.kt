@@ -1,5 +1,7 @@
 package com.lek.parrot.newevents.ui
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.Data
@@ -28,5 +30,9 @@ class CreateEventActivity : AppCompatActivity() {
             .putString(NOTIFICATION_TARGET, "Target")
             .build()
 //        NotificationScheduler.scheduleNotification(applicationContext, data)
+    }
+
+    companion object {
+        fun start(context: Context) = context.startActivity(Intent(context, CreateEventActivity::class.java))
     }
 }

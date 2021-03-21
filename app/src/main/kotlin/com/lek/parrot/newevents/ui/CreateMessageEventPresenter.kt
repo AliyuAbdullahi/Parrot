@@ -4,14 +4,13 @@ import androidx.lifecycle.viewModelScope
 import com.lek.parrot.R
 import com.lek.parrot.core.BasePresenter
 import com.lek.parrot.newevents.domain.CreateEventState
+import com.lek.parrot.newevents.domain.DataBuilder
 import com.lek.parrot.newevents.domain.DateUtil
 import com.lek.parrot.newevents.domain.validate
 import com.lek.parrot.shared.CreateEventInteractor
 import com.lek.parrot.shared.Event
 import com.lek.parrot.shared.IStringService
 import com.lek.parrot.shared.logDebug
-import com.lek.parrot.shared.logError
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onCompletion
@@ -25,6 +24,9 @@ class CreateMessageEventPresenter(
 
     private var eventState: CreateEventState = CreateEventState.MessageEvent()
 
+    private val messageData get() = eventState as CreateEventState.MessageEvent
+    private val messageEventState get() = eventState as CreateEventState.MessageEvent
+
     override fun onStart() {
         super.onStart()
         observeDateClicked()
@@ -37,37 +39,37 @@ class CreateMessageEventPresenter(
 
     private fun observeDateClicked() = viewModelScope.launch {
         view.date()
-            .handleError()
+            .handleError(stringService.getString(R.string.error_occurred))
             .collect { view.showDatePickerDialog() }
     }
 
     private fun observePhoneNumber() = viewModelScope.launch {
-        view.phoneNumber().handleError().collect {
+        view.phoneNumber().handleError(stringService.getString(R.string.error_occurred)).collect {
             (it as CharSequence).let { phoneNumber ->
-                eventState = (eventState as CreateEventState.MessageEvent).copy(phoneNumber = phoneNumber.toString())
+                eventState = messageEventState.copy(phoneNumber = phoneNumber.toString())
             }
         }
     }
 
     private fun observeName() = viewModelScope.launch {
-        view.receiverName().handleError().collect {
+        view.receiverName().handleError(stringService.getString(R.string.error_occurred)).collect {
             (it as CharSequence).let { name ->
-                eventState = (eventState as CreateEventState.MessageEvent).copy(name = name.toString())
+                eventState = messageEventState.copy(name = name.toString())
             }
         }
     }
 
     private fun observeMessage() = viewModelScope.launch {
-        view.message().handleError().collect {
+        view.message().handleError(stringService.getString(R.string.error_occurred)).collect {
             (it as CharSequence).let { message ->
-                eventState = (eventState as CreateEventState.MessageEvent).copy(message = message.toString())
+                eventState = messageEventState.copy(message = message.toString())
             }
         }
     }
 
     private fun observeTimePickerDialog() = viewModelScope.launch {
         view.time()
-            .handleError()
+            .handleError(stringService.getString(R.string.error_occurred))
             .collect { view.showTimePicker() }
     }
 
@@ -83,7 +85,11 @@ class CreateMessageEventPresenter(
                     CreateEventState.InvalidMonth -> view.showError(stringService.getString(R.string.invalid_month))
                     CreateEventState.InvalidYear -> view.showError(stringService.getString(R.string.invalid_year))
                     CreateEventState.EmptyTime -> view.showError(stringService.getString(R.string.enter_event_time))
-                    CreateEventState.EmptyMessage -> view.showAddMessageError(stringService.getString(R.string.enter_event_message))
+                    CreateEventState.EmptyMessage -> view.showAddMessageError(
+                        stringService.getString(
+                            R.string.enter_event_message
+                        )
+                    )
                     CreateEventState.EmptyReceiver -> view.showError(stringService.getString(R.string.enter_receiver))
                     CreateEventState.InvalidDay -> view.showError(stringService.getString(R.string.enter_valid_date))
 
@@ -102,12 +108,8 @@ class CreateMessageEventPresenter(
                             ),
                             false
                         )
-
                         logDebug(messageEvent.toString())
-                        createEventInteractor(messageEvent)
-                            .handleError()
-                            .onCompletion { view.showSuccessMessage() }
-                            .collect()
+                        createEvent(messageEvent)
                     }
 
                     else -> throw Error("Invalid State")
@@ -115,8 +117,29 @@ class CreateMessageEventPresenter(
             }
     }
 
+    private suspend fun createEvent(messageEvent: Event.MessageEvent) {
+        createEventInteractor(messageEvent)
+            .handleError(stringService.getString(R.string.error_occurred))
+            .onCompletion {
+                view.showSuccessMessage()
+                view.scheduleNotification(DataBuilder.buildFromMessage(messageEvent), getEventTimeStamp() - System.currentTimeMillis())
+                view.onBack()
+            }
+            .collect()
+    }
+
+    private fun getEventTimeStamp() = DateUtil.getTimeStamp(
+        messageData.minute,
+        messageData.hour,
+        messageData.dayOfMonth,
+        messageData.month,
+        messageData.year
+    )
+
     override fun onTimeSet(hourOfDay: Int, minute: Int) {
-        eventState = (eventState as CreateEventState.MessageEvent).copy(hour = hourOfDay, minute = minute)
+        eventState =
+            (eventState as CreateEventState.MessageEvent).copy(hour = hourOfDay, minute = minute)
+        view.setTime(hourOfDay, minute)
     }
 
     override fun onDateSet(year: Int, month: Int, dayOfMonth: Int) {
@@ -125,10 +148,7 @@ class CreateMessageEventPresenter(
             month = month,
             dayOfMonth = dayOfMonth
         )
-    }
 
-    private fun Flow<*>.handleError() = catch { error ->
-        logError(error)
-        view.showError(error.message ?: stringService.getString(R.string.error_occurred))
+        view.setDate(dayOfMonth, month, year)
     }
 }

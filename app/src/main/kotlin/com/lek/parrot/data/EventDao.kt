@@ -23,7 +23,7 @@ interface EventDao {
     @Update
     suspend fun updateEvent(event: DataEvent)
 
-    @Query("SELECT * from event")
+    @Query("SELECT * from event ORDER BY fireAt ASC")
     fun getAllEvents(): Flow<List<DataEvent>>
 
     @Query("DELETE FROM event")

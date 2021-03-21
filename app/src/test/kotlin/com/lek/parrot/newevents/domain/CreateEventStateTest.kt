@@ -21,29 +21,10 @@ internal class CreateEventStateTest {
     }
 
     @Test
-    fun `on wrong month - return Invalid Month`() {
-        event = event.copy(month = 1, hour = 4, minute = 12)
-        val result = event.validate()
-        assert(result is CreateEventState.InvalidMonth)
-    }
-
-    @Test
     fun `on wrong year - return Invalid Year`() {
         event = event.copy(month = 6, hour = 4, minute = 12, year = 2020)
         val result = event.validate()
         assert(result is CreateEventState.InvalidYear)
-    }
-
-    @Test
-    fun `if day of the month is less than current day - return Invalid Day`() {
-        event = event.copy(
-            hour = 4,
-            minute = 12,
-            month = DateUtil.currentMonth(),
-            dayOfMonth = DateUtil.currentDay() - 1
-        )
-        val result = event.validate()
-        assert(result is CreateEventState.InvalidDay)
     }
 
     @Test

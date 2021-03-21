@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/cell_height"
+    android:background="?attr/selectableItemBackground">
+
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/topContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/standardMargin"
+        android:layout_marginEnd="@dimen/standardMargin"
+        app:constraint_referenced_ids="message, deleteEvent"
+        app:flow_horizontalStyle="spread_inside"
+        app:flow_wrapMode="chain"
+        app:layout_constraintBottom_toTopOf="@id/bottomContent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/ic_alert_24"
+        android:drawablePadding="@dimen/smallPadding"
+        android:gravity="top"
+        android:textSize="@dimen/bodyTextSize"
+        android:textStyle="bold"
+        tools:text="Call Daddy by 4pm" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/deleteEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/standardPadding"
+        android:src="@drawable/ic_delete_24" />
+
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/bottomContent"
+        android:layout_marginEnd="@dimen/standardMargin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/standardMargin"
+        android:layout_marginTop="4dp"
+        app:constraint_referenced_ids="createdAt, remindAt"
+        app:flow_horizontalStyle="spread_inside"
+        app:flow_wrapMode="chain"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topContent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/createdAt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/smallText"
+        tools:text="04/03/2021" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/remindAt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/smallText"
+        tools:text="05/04/2021" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="@dimen/tinyDp"
+        android:background="@color/lightGrey"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

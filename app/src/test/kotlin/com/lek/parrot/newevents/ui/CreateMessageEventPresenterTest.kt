@@ -43,7 +43,6 @@ internal class CreateMessageEventPresenterTest {
     private val testPhoneNumber = "084331"
     private val testMessage = "message"
     private val testName = "testName"
-
     private val view: CreateMessageEventContract.View = mockk {
         every { receiverNumber() } returns mockInitFlow
         every { date() } returns flowOf(Unit)
@@ -51,8 +50,8 @@ internal class CreateMessageEventPresenterTest {
         every { onAddEventClicked() } returns emptyFlow()
         every { setReceiverName(any()) } just runs
         every { setReceiverNumber(any()) } just runs
-        every { setDate(any()) } just runs
-        every { setTime(any()) } just runs
+        every { setDate(any(), any(), any()) } just runs
+        every { setTime(any(), any()) } just runs
         every { showDatePickerDialog() } just runs
         every { showTimePicker() } just runs
         every { showAddMessageError(any()) } just runs
@@ -61,6 +60,8 @@ internal class CreateMessageEventPresenterTest {
         every { receiverName() } returns mockInitFlow
         every { message() } returns mockInitFlow
         every { showSuccessMessage() } just runs
+        every { scheduleNotification(any(), any()) } just runs
+        every { onBack() }
     }
 
     private val presenter = CreateMessageEventPresenter(createEventInteractor, stringService)
@@ -87,12 +88,16 @@ internal class CreateMessageEventPresenterTest {
         every { view.receiverName() } returns flowOf(testName)
         every { view.message() } returns flowOf(testMessage)
         every { view.onAddEventClicked() } returns flowOf(Unit)
+        every { view.onBack() } just runs
         every { createEventInteractor(any()) } returns emptyFlow()
         presenter.onDateSet(2022, 1, 1)
         presenter.onTimeSet(4, 39)
         view.onAddEventClicked()
         presenter.onStart()
         verify { createEventInteractor(any()) }
+        verify { view.showSuccessMessage() }
+        verify { view.scheduleNotification(any(), any()) }
+        verify { view.onBack() }
     }
 
     @ExperimentalCoroutinesApi

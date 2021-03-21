@@ -5,7 +5,7 @@
     <string name="time_hint">time</string>
     <string name="later_date_hint">…later date…</string>
     <string name="add_event">Add Event</string>
-    <string name="message">Message...</string>
+    <string name="message">Message…</string>
     <string name="invalid_time">Invalid Time</string>
     <string name="invalid_month">Invalid Month</string>
     <string name="invalid_year">Invalid Year</string>
@@ -15,4 +15,10 @@
     <string name="enter_valid_date">Select valid date</string>
     <string name="error_occurred">Unknown Error Occurred</string>
     <string name="error_create_event">Error managing state</string>
+    <string name="upcoming_events">Upcoming Events</string>
+    <string name="hour_minute">%1$d : %2$d</string>
+    <string name="date">%1$d/%2$d/%3$d</string>
+    <string name="created_at">Created on: %1$s</string>
+    <string name="reminder_at">Remind on: %1$s</string>
+    <string name="event_empty_state_message">Add Event to see upcoming Events</string>
 </resources>
