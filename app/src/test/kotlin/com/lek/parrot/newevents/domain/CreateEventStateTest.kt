@@ -11,7 +11,7 @@ internal class CreateEventStateTest {
 
     @Test
     fun `on empty - return Empty Time`() {
-        val result = event.validate()
+        val result = event.validateMessageEvent()
         assert(result is CreateEventState.EmptyTime)
     }
 
@@ -23,7 +23,7 @@ internal class CreateEventStateTest {
     @Test
     fun `on wrong year - return Invalid Year`() {
         event = event.copy(month = 6, hour = 4, minute = 12, year = 2020)
-        val result = event.validate()
+        val result = event.validateMessageEvent()
         assert(result is CreateEventState.InvalidYear)
     }
 
@@ -36,7 +36,7 @@ internal class CreateEventStateTest {
             dayOfMonth = DateUtil.currentDay(),
             year = DateUtil.currentYear()
         )
-        val result = event.validate()
+        val result = event.validateMessageEvent()
         assert(result is CreateEventState.InvalidTime)
     }
 
@@ -49,7 +49,7 @@ internal class CreateEventStateTest {
             dayOfMonth = DateUtil.currentDay(),
             year = DateUtil.currentYear()
         )
-        val result = event.validate()
+        val result = event.validateMessageEvent()
         assert(result is CreateEventState.InvalidTime)
     }
 
@@ -62,7 +62,7 @@ internal class CreateEventStateTest {
             dayOfMonth = DateUtil.currentDay(),
             year = DateUtil.currentYear()
         )
-        val result = event.validate()
+        val result = event.validateMessageEvent()
         assert(result is CreateEventState.EmptyMessage)
     }
 
@@ -76,7 +76,7 @@ internal class CreateEventStateTest {
             year = DateUtil.currentYear(),
             message = "Love for all"
         )
-        val result = event.validate()
+        val result = event.validateMessageEvent()
         assert(result is CreateEventState.EmptyReceiver)
     }
 
@@ -91,7 +91,7 @@ internal class CreateEventStateTest {
             message = testMessage,
             name = testName
         )
-        val result = event.validate()
+        val result = event.validateMessageEvent()
         assert(result is CreateEventState.EmptyReceiver)
     }
 }

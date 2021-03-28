@@ -4,35 +4,36 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.work.Data
-import com.lek.parrot.R
-import com.lek.parrot.newevents.domain.IEventRepository
-import com.lek.parrot.notification.NOTIFICATION_ID
-import com.lek.parrot.notification.NOTIFICATION_MESSAGE
-import com.lek.parrot.notification.NOTIFICATION_TARGET
-import com.lek.parrot.notification.NOTIFICATION_TITLE
+import com.lek.parrot.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class CreateEventActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var repository: IEventRepository
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        val binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        processIntent(binding)
+    }
 
-        val data = Data.Builder().putInt(NOTIFICATION_ID, 0)
-            .putString(NOTIFICATION_TITLE, "Call Dad")
-            .putString(NOTIFICATION_MESSAGE, "Call your father now")
-            .putString(NOTIFICATION_TARGET, "Target")
-            .build()
-//        NotificationScheduler.scheduleNotification(applicationContext, data)
+    private fun processIntent(binding: ActivityMainBinding) {
+        if (intent.hasExtra(CREATE_EVENT_TYPE)) {
+            when (createEventTypeFromOrdinal(intent.getIntExtra(CREATE_EVENT_TYPE, UNKNOWN_SCREEN))) {
+                CreateEventType.MESSAGE -> binding.createEventView.showMessageEvent()
+                CreateEventType.CALL -> binding.createEventView.showCallEvent()
+            }
+        }
     }
 
     companion object {
-        fun start(context: Context) = context.startActivity(Intent(context, CreateEventActivity::class.java))
+        const val CREATE_EVENT_TYPE = "CREATE_EVENT_TYPE"
+        const val UNKNOWN_SCREEN = -1
+        fun start(context: Context, eventType: CreateEventType) =
+            context.startActivity(
+                Intent(context, CreateEventActivity::class.java).apply {
+                    putExtra(CREATE_EVENT_TYPE, eventType.ordinal)
+                }
+            )
     }
 }

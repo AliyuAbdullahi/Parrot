@@ -15,7 +15,20 @@ object DataBuilder {
             .putString(NOTIFICATION_TARGET, "Target")
             .build()
 
+    fun buildFromCallEvent(callEvent: Event.CallEvent): Data =
+        Data.Builder().putInt(NOTIFICATION_ID, 0)
+            .putString(NOTIFICATION_TITLE, getName(callEvent))
+            .putString(NOTIFICATION_TARGET, "Target")
+            .build()
+
     private fun getName(messageEvent: Event.MessageEvent): String {
+        if (messageEvent.receiverName.isBlank()) {
+            return if (messageEvent.receiverNumber.isBlank()) "-" else messageEvent.receiverNumber
+        }
+        return if (messageEvent.receiverName.isBlank()) "-" else messageEvent.receiverName
+    }
+
+    private fun getName(messageEvent: Event.CallEvent): String {
         if (messageEvent.receiverName.isBlank()) {
             return if (messageEvent.receiverNumber.isBlank()) "-" else messageEvent.receiverNumber
         }

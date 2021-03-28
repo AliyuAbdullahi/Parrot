@@ -1,7 +1,6 @@
 package com.lek.parrot.core
 
 import androidx.annotation.CallSuper
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
@@ -20,9 +19,9 @@ abstract class BasePresenter<View : BaseView> : ViewModel(), LifecycleObserver {
     }
 
     @CallSuper
-    fun attachToView(view: View, host: AppCompatActivity) {
+    fun attachToView(view: View, lifecycle: Lifecycle) {
         this.viewRef = WeakReference(view)
-        this.viewLifecycleRef = WeakReference(host.lifecycle)
+        this.viewLifecycleRef = WeakReference(lifecycle)
         viewLifecycleRef?.get()?.addObserver(this)
     }
 

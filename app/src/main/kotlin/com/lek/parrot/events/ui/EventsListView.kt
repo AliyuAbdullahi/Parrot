@@ -9,7 +9,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lek.parrot.databinding.ViewEventsListviewBinding
 import com.lek.parrot.events.ui.adapter.EventListAdapter
-import com.lek.parrot.newevents.ui.ICreateMessageEventStarter
+import com.lek.parrot.newevents.ui.ICreateEventStarter
 import com.lek.parrot.shared.Event
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ActivityContext
@@ -29,7 +29,7 @@ class EventsListView @JvmOverloads constructor(
     lateinit var presenter: EventsListContract.Presenter
 
     @Inject
-    lateinit var createMessageEventStarter: ICreateMessageEventStarter
+    lateinit var createEventStarter: ICreateEventStarter
 
     private val binding = ViewEventsListviewBinding.inflate(LayoutInflater.from(context), this, true)
 
@@ -54,7 +54,7 @@ class EventsListView @JvmOverloads constructor(
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-        (presenter as EventsListPresenter).attachToView(this, activity)
+        (presenter as EventsListPresenter).attachToView(this, activity.lifecycle)
         binding.motionLayout.addTransitionListener(object : MotionLayout.TransitionListener {
             override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {}
 
@@ -70,7 +70,11 @@ class EventsListView @JvmOverloads constructor(
 
     override fun openMessageEvent(): Flow<Unit> = binding.createMessageEvent.clicks()
 
-    override fun startCreateEvent() = createMessageEventStarter.startMessageEvent(context)
+    override fun openCallEvent(): Flow<Unit> = binding.createCallEvent.clicks()
+
+    override fun startCreateMessageEvent() = createEventStarter.startMessageEvent(context)
+
+    override fun startCreateCallEvent() = createEventStarter.startCallEvent(context)
 
     override fun setTitle(title: String) {
         binding.title.text = title

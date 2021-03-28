@@ -28,9 +28,85 @@ sealed class CreateEventState {
         val phoneNumber: String = "",
         val message: String = ""
     ) : CreateEventState()
+
+    data class CallEvent(
+        val hour: Hour = ABSENT_VALUE,
+        val minute: Minute = ABSENT_VALUE,
+        val year: Year = DateUtil.currentYear(),
+        val month: Month = DateUtil.currentMonth(),
+        val dayOfMonth: DayOfMonth = DateUtil.currentDay(),
+        val name: String = "",
+        val phoneNumber: String = ""
+    ) : CreateEventState()
 }
 
-fun CreateEventState.validate(): CreateEventState {
+fun CreateEventState.validateCallEvent(): CreateEventState {
+    if (this !is CreateEventState.CallEvent) {
+        return CreateEventState.InvalidEventState
+    }
+
+    if (year > DateUtil.currentYear()) {
+        return CreateEventState.CallEvent(
+            hour,
+            minute,
+            year,
+            month,
+            dayOfMonth
+        )
+    }
+    if (hour.isAbsent() || minute.isAbsent()) {
+        return CreateEventState.EmptyTime
+    }
+
+    if (year.isAbsent() && !month.isAbsent() && DateUtil.currentMonth() > month) {
+        return CreateEventState.InvalidMonth
+    }
+
+    if (!year.isAbsent() && month.isAbsent()) {
+        return CreateEventState.InvalidMonth
+    }
+
+    if (!year.isAbsent() && year < DateUtil.currentYear()) {
+        return CreateEventState.InvalidYear
+    }
+
+    if (year.isAbsent() && month == DateUtil.currentMonth() && dayOfMonth < DateUtil.currentDay()) {
+        return CreateEventState.InvalidDay
+    }
+
+    if (year == DateUtil.currentYear() &&
+        month == DateUtil.currentMonth() &&
+        dayOfMonth == DateUtil.currentDay() &&
+        hour < DateUtil.currentHour()
+    ) {
+        return CreateEventState.InvalidTime
+    }
+
+    if (year == DateUtil.currentYear() &&
+        month == DateUtil.currentMonth() &&
+        dayOfMonth == DateUtil.currentDay() &&
+        hour == DateUtil.currentHour() &&
+        minute < DateUtil.currentMinute()
+    ) {
+        return CreateEventState.InvalidTime
+    }
+
+    if (name.isEmpty() || phoneNumber.isEmpty()) {
+        return CreateEventState.EmptyReceiver
+    }
+
+    return CreateEventState.CallEvent(
+        hour,
+        minute,
+        year,
+        month,
+        dayOfMonth,
+        name,
+        phoneNumber
+    )
+}
+
+fun CreateEventState.validateMessageEvent(): CreateEventState {
 
     if (this !is CreateEventState.MessageEvent) {
         return CreateEventState.InvalidEventState

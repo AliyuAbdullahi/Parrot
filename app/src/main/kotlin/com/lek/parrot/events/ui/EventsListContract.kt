@@ -11,7 +11,9 @@ interface EventsListContract {
         fun showEvents(events: List<Event>)
         fun setTitle(title: String)
         fun openMessageEvent(): Flow<Unit>
-        fun startCreateEvent()
+        fun startCreateMessageEvent()
         fun showEmptyState(emptyStateMessage: String)
+        fun openCallEvent(): Flow<Unit>
+        fun startCreateCallEvent()
     }
 }
