@@ -20,6 +20,7 @@ class EventsListPresenter(
         super.onStart()
         observeEventList()
         observeCreateEventClick()
+        observeOpenCallEventClick()
     }
 
     override fun onCreate() {
@@ -29,7 +30,13 @@ class EventsListPresenter(
 
     private fun observeCreateEventClick() = viewModelScope.launch {
         view.openMessageEvent().handleError(stringService.getString(R.string.error_occurred)).collect {
-            view.startCreateEvent()
+            view.startCreateMessageEvent()
+        }
+    }
+
+    private fun observeOpenCallEventClick() = viewModelScope.launch {
+        view.openCallEvent().handleError(stringService.getString(R.string.error_occurred)).collect {
+            view.startCreateCallEvent()
         }
     }
 

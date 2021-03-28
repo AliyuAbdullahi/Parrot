@@ -1,4 +1,4 @@
-package com.lek.parrot.newevents.ui
+package com.lek.parrot.newevents.ui.createcallevent
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -11,7 +11,8 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.work.Data
 import com.lek.parrot.R
-import com.lek.parrot.databinding.ViewCreateEventBinding
+import com.lek.parrot.databinding.ViewCreateCallEventBinding
+import com.lek.parrot.newevents.ui.CreateEventActivity
 import com.lek.parrot.notification.NotificationScheduler
 import com.lek.parrot.shared.DatePickerDialogStarter
 import com.lek.parrot.shared.TimePickerDialogStarter
@@ -24,27 +25,27 @@ import reactivecircus.flowbinding.android.widget.textChanges
 import timber.log.Timber
 
 @AndroidEntryPoint
-class CreateMessageEventView @JvmOverloads constructor(
+class CreateCallEventView @JvmOverloads constructor(
     @ActivityContext context: Context,
     attributes: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attributes, defStyleAttr),
-    CreateMessageEventContract.View,
+    CreateCallEventContract.View,
     TimePickerDialog.OnTimeSetListener,
     DatePickerDialog.OnDateSetListener {
 
     @Inject
-    lateinit var presenter: CreateMessageEventContract.Presenter
+    lateinit var presenter: CreateCallEventContract.Presenter
 
-    private val binding = ViewCreateEventBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = ViewCreateCallEventBinding.inflate(LayoutInflater.from(context), this, true)
 
     private val activity: CreateEventActivity get() = context as CreateEventActivity
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-        (presenter as CreateMessageEventPresenter).attachToView(
+        (presenter as CreateCallEventPresenter).attachToView(
             this,
-            activity
+            activity.lifecycle
         )
     }
 
@@ -89,10 +90,6 @@ class CreateMessageEventView @JvmOverloads constructor(
         presenter.onDateSet(year, month, dayOfMonth)
     }
 
-    override fun showAddMessageError(s: String) {
-        binding.eventMessage.error = s
-    }
-
     override fun showError(errorMessage: String) {
         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
     }
@@ -100,8 +97,6 @@ class CreateMessageEventView @JvmOverloads constructor(
     override fun phoneNumber(): Flow<CharSequence> = binding.receiverNumber.textChanges().skipInitialValue()
 
     override fun receiverName(): Flow<CharSequence> = binding.receiverName.textChanges().skipInitialValue()
-
-    override fun message(): Flow<CharSequence> = binding.eventMessage.textChanges().skipInitialValue()
 
     override fun showSuccessMessage() {
         Toast.makeText(context, "You have successfully added an event", Toast.LENGTH_SHORT).show()

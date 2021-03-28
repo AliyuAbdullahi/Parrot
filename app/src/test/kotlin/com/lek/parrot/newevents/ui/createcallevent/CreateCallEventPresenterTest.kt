@@ -1,9 +1,7 @@
-package com.lek.parrot.newevents.ui
+package com.lek.parrot.newevents.ui.createcallevent
 
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
-import com.lek.parrot.newevents.ui.createmessageevent.CreateMessageEventContract
-import com.lek.parrot.newevents.ui.createmessageevent.CreateMessageEventPresenter
+import com.lek.parrot.BaseTest
 import com.lek.parrot.shared.CreateEventInteractor
 import com.lek.parrot.shared.IStringService
 import io.mockk.every
@@ -11,31 +9,23 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.verify
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
-import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 @ExperimentalCoroutinesApi
-internal class CreateMessageEventPresenterTest {
-
-    @ExperimentalCoroutinesApi
-    private val dispatcher = TestCoroutineDispatcher()
+internal class CreateCallEventPresenterTest : BaseTest() {
 
     private val testString: String = ""
     private val createEventInteractor: CreateEventInteractor = mockk()
     private val mockLifeCycle: Lifecycle = mockk {
         every { addObserver(any()) } just runs
     }
-    private val mockAppCompatActivity: AppCompatActivity = mockk {
-        every { lifecycle } returns mockLifeCycle
-    }
+
     private val mockInitFlow: Flow<CharSequence> = mockk()
 
     private val stringService: IStringService = mockk {
@@ -43,9 +33,8 @@ internal class CreateMessageEventPresenterTest {
     }
 
     private val testPhoneNumber = "084331"
-    private val testMessage = "message"
     private val testName = "testName"
-    private val view: CreateMessageEventContract.View = mockk {
+    private val view: CreateCallEventContract.View = mockk {
         every { receiverNumber() } returns mockInitFlow
         every { date() } returns flowOf(Unit)
         every { time() } returns flowOf(Unit)
@@ -56,22 +45,20 @@ internal class CreateMessageEventPresenterTest {
         every { setTime(any(), any()) } just runs
         every { showDatePickerDialog() } just runs
         every { showTimePicker() } just runs
-        every { showAddMessageError(any()) } just runs
         every { showError(any()) } just runs
         every { phoneNumber() } returns mockInitFlow
         every { receiverName() } returns mockInitFlow
-        every { message() } returns mockInitFlow
         every { showSuccessMessage() } just runs
         every { scheduleNotification(any(), any()) } just runs
         every { onBack() }
     }
 
-    private val presenter = CreateMessageEventPresenter(createEventInteractor, stringService)
+    private val presenter = CreateCallEventPresenter(createEventInteractor, stringService)
 
     @BeforeEach
-    fun setUp() {
-        Dispatchers.setMain(dispatcher)
-        presenter.attachToView(view, mockAppCompatActivity.lifecycle)
+    override fun setUp() {
+        super.setUp()
+        presenter.attachToView(view, mockLifeCycle)
     }
 
     @ExperimentalCoroutinesApi
@@ -85,17 +72,17 @@ internal class CreateMessageEventPresenterTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `when all inputs are valid - event is created`() = runBlockingTest {
+    fun `when all inputs are valid - event is created`() = dispatcher.runBlockingTest {
         every { view.phoneNumber() } returns flowOf(testPhoneNumber)
         every { view.receiverName() } returns flowOf(testName)
-        every { view.message() } returns flowOf(testMessage)
         every { view.onAddEventClicked() } returns flowOf(Unit)
         every { view.onBack() } just runs
-        every { createEventInteractor(any()) } returns emptyFlow()
-        presenter.onDateSet(2022, 1, 1)
+        every { createEventInteractor(any()) } returns flowOf(Unit)
+        presenter.onDateSet(2050, 12, 12)
         presenter.onTimeSet(4, 39)
-        view.onAddEventClicked()
         presenter.onStart()
+        view.onAddEventClicked()
+        dispatcher.advanceTimeBy(1)
         verify { createEventInteractor(any()) }
         verify { view.showSuccessMessage() }
         verify { view.scheduleNotification(any(), any()) }

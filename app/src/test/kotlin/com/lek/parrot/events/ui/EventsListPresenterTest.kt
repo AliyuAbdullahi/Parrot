@@ -1,6 +1,5 @@
 package com.lek.parrot.events.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import com.lek.parrot.core.invoke
 import com.lek.parrot.events.domain.EventsListInteractor
@@ -26,16 +25,15 @@ internal class EventsListPresenterTest {
     @ExperimentalCoroutinesApi
     private val dispatcher = TestCoroutineDispatcher()
 
-    private val interactor: EventsListInteractor = mockk()
     private val stringService: IStringService = mockk()
-    private val view: EventsListContract.View = mockk()
-
+    private val view: EventsListContract.View = mockk {
+        every { openCallEvent() } returns emptyFlow()
+    }
     private val mockLifeCycle: Lifecycle = mockk {
         every { addObserver(any()) } just runs
     }
-    private val mockAppCompatActivity: AppCompatActivity = mockk {
-        every { lifecycle } returns mockLifeCycle
-    }
+
+    private val interactor: EventsListInteractor = mockk()
 
     private val presenter = EventsListPresenter(interactor, stringService)
 
@@ -46,18 +44,18 @@ internal class EventsListPresenterTest {
         Dispatchers.setMain(dispatcher)
         val testString = "testString"
         every { stringService.getString(any()) } returns testString
-        presenter.attachToView(view, mockAppCompatActivity)
+        presenter.attachToView(view, mockLifeCycle)
     }
 
     @Test
-    fun `on create - view title is set`() = runBlockingTest {
+    fun `on create - view title is set`() = dispatcher.runBlockingTest {
         every { view.setTitle(any()) } just runs
         presenter.onCreate()
         verify { view.setTitle(any()) }
     }
 
     @Test
-    fun `when there is list - view display items`() = runBlockingTest {
+    fun `when there is list - view display items`() = dispatcher.runBlockingTest {
         every { interactor() } returns flowOf(listOf(testEvent))
         every { view.showEvents(any()) } just runs
         every { view.openMessageEvent() } returns emptyFlow()
@@ -66,7 +64,7 @@ internal class EventsListPresenterTest {
     }
 
     @Test
-    fun `on empty list - view display empty message`() {
+    fun `on empty list - view display empty message`() = dispatcher.runBlockingTest {
         every { interactor() } returns flowOf(listOf())
         every { view.showEvents(any()) } just runs
         every { view.openMessageEvent() } returns emptyFlow()

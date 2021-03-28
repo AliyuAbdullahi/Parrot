@@ -2,6 +2,7 @@ package com.lek.parrot.newevents.ui
 
 import android.content.Context
 
-interface ICreateMessageEventStarter {
+interface ICreateEventStarter {
     fun startMessageEvent(context: Context)
+    fun startCallEvent(context: Context)
 }

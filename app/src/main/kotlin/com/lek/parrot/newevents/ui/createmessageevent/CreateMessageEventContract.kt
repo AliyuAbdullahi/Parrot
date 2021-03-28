@@ -1,4 +1,4 @@
-package com.lek.parrot.newevents.ui
+package com.lek.parrot.newevents.ui.createmessageevent
 
 import androidx.work.Data
 import com.lek.parrot.core.BaseView
@@ -28,5 +28,6 @@ interface CreateMessageEventContract {
         fun showSuccessMessage()
         fun onBack()
         fun scheduleNotification(data: Data, delay: Long)
+        fun setMessage(message: String)
     }
 }
