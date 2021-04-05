@@ -21,6 +21,12 @@ object DataBuilder {
             .putString(NOTIFICATION_TARGET, "Target")
             .build()
 
+    fun buildForReminderEvent(reminderEvent: Event.ReminderEvent): Data =
+        Data.Builder().putInt(NOTIFICATION_ID, 0)
+            .putString(NOTIFICATION_TITLE, getMessage(reminderEvent))
+            .putString(NOTIFICATION_TARGET, "Target")
+            .build()
+
     private fun getName(messageEvent: Event.MessageEvent): String {
         if (messageEvent.receiverName.isBlank()) {
             return if (messageEvent.receiverNumber.isBlank()) "-" else messageEvent.receiverNumber
@@ -33,5 +39,9 @@ object DataBuilder {
             return if (messageEvent.receiverNumber.isBlank()) "-" else messageEvent.receiverNumber
         }
         return if (messageEvent.receiverName.isBlank()) "-" else messageEvent.receiverName
+    }
+
+    private fun getMessage(reminderEvent: Event.ReminderEvent): String {
+        return if (reminderEvent.message.isBlank()) "-" else reminderEvent.message
     }
 }

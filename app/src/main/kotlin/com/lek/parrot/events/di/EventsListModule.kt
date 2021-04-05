@@ -1,11 +1,9 @@
 package com.lek.parrot.events.di
 
-import com.lek.parrot.events.ui.EventsListContract
 import com.lek.parrot.events.domain.EventsListInteractor
+import com.lek.parrot.events.ui.EventsListContract
 import com.lek.parrot.events.ui.EventsListPresenter
 import com.lek.parrot.newevents.domain.IEventRepository
-import com.lek.parrot.newevents.ui.CreateMessageEventStarter
-import com.lek.parrot.newevents.ui.ICreateEventStarter
 import com.lek.parrot.shared.IStringService
 import dagger.Module
 import dagger.Provides
@@ -26,7 +24,4 @@ object EventsListModule {
         interactor: EventsListInteractor,
         stringService: IStringService
     ): EventsListContract.Presenter = EventsListPresenter(interactor, stringService)
-
-    @Provides
-    fun provideCreateMessageEventStarter(): ICreateEventStarter = CreateMessageEventStarter()
 }

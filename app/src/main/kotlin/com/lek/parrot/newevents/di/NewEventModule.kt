@@ -6,6 +6,8 @@ import com.lek.parrot.newevents.ui.createevent.CreateEventContract
 import com.lek.parrot.newevents.ui.createevent.CreateEventPresenter
 import com.lek.parrot.newevents.ui.createmessageevent.CreateMessageEventContract
 import com.lek.parrot.newevents.ui.createmessageevent.CreateMessageEventPresenter
+import com.lek.parrot.newevents.ui.createreminderevent.CreateReminderEventContract
+import com.lek.parrot.newevents.ui.createreminderevent.CreateReminderEventPresenter
 import com.lek.parrot.shared.CreateEventInteractor
 import com.lek.parrot.shared.IStringService
 import dagger.Module
@@ -28,6 +30,12 @@ object NewEventModule {
         interactor: CreateEventInteractor,
         stringService: IStringService
     ): CreateCallEventContract.Presenter = CreateCallEventPresenter(interactor, stringService)
+
+    @Provides
+    fun provideCreateReminderEventPresenter(
+        interactor: CreateEventInteractor,
+        stringService: IStringService
+    ): CreateReminderEventContract.Presenter = CreateReminderEventPresenter(interactor, stringService)
 
     @Provides
     fun provideCreateEventPresenter(): CreateEventContract.Presenter = CreateEventPresenter()

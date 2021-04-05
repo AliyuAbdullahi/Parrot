@@ -1,4 +1,4 @@
-package com.lek.parrot.newevents.ui.createcallevent
+package com.lek.parrot.newevents.ui.createreminderevent
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -11,7 +11,7 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.work.Data
 import com.lek.parrot.R
-import com.lek.parrot.databinding.ViewCreateCallEventBinding
+import com.lek.parrot.databinding.ViewCreateReminderEventBinding
 import com.lek.parrot.events.ui.UpcomingEventsActivity
 import com.lek.parrot.newevents.domain.ScreenType
 import com.lek.parrot.newevents.ui.OnBackListener
@@ -24,71 +24,78 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import reactivecircus.flowbinding.android.view.clicks
 import reactivecircus.flowbinding.android.widget.textChanges
-import timber.log.Timber
 
 @AndroidEntryPoint
-class CreateCallEventView @JvmOverloads constructor(
+class CreateReminderEventView @JvmOverloads constructor(
     @ActivityContext context: Context,
     attributes: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attributes, defStyleAttr),
-    CreateCallEventContract.View,
+    CreateReminderEventContract.View,
     TimePickerDialog.OnTimeSetListener,
     DatePickerDialog.OnDateSetListener {
 
+    @Inject
+    lateinit var presenter: CreateReminderEventContract.Presenter
+
     private var onBackListener: OnBackListener? = null
 
-    @Inject
-    lateinit var presenter: CreateCallEventContract.Presenter
-
     private val binding =
-        ViewCreateCallEventBinding.inflate(LayoutInflater.from(context), this, true)
+        ViewCreateReminderEventBinding.inflate(LayoutInflater.from(context), this, true)
+
+    override fun eventDate(eventDate: String) {
+        binding.eventDate.text = eventDate
+    }
 
     override fun onFinishInflate() {
         super.onFinishInflate()
         requireNotNull(UpcomingEventsActivity.activityLifecycle).let {
-            (presenter as CreateCallEventPresenter).attachToView(
+            (presenter as CreateReminderEventPresenter).attachToView(
                 this,
                 it
             )
         }
     }
 
-    override fun receiverNumber(): Flow<CharSequence> =
-        binding.receiverNumber.textChanges().skipInitialValue()
-
-    override fun date(): Flow<Unit> = binding.eventDate.clicks()
-
-    override fun time(): Flow<Unit> = binding.eventTime.clicks()
-
-    override fun onAddEventClicked() = binding.addEvent.clicks()
-
-    override fun setReceiverName(name: String) {
-        binding.receiverName.apply { setText(name) }
+    override fun eventTime(eventTime: String) {
+        binding.eventTime.text = eventTime
     }
 
-    override fun setReceiverNumber(number: String) {
-        binding.receiverNumber.apply { setText(number) }
+    override fun setMessage(message: String) {
+        binding.message.apply {
+            setText(message)
+        }
+    }
+
+    override fun eventDateClick(): Flow<Unit> = binding.eventDate.clicks()
+
+    override fun eventTimeClick(): Flow<Unit> = binding.eventTime.clicks()
+
+    override fun createEventClicked(): Flow<Unit> = binding.addEvent.clicks()
+
+    override fun message(): Flow<CharSequence> = binding.message.textChanges()
+
+    override fun showError(errorMessage: String) {
+        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
     }
 
     override fun setDate(day: Int, month: Int, year: Int) {
-        binding.eventDate.text = context.getString(R.string.date, day, month, year)
+        binding.eventDate.text = context?.getString(R.string.date, day, month, year) ?: ""
     }
 
     override fun setTime(hour: Int, minute: Int) {
-        binding.eventTime.text = context.getString(R.string.hour_minute, hour, minute)
+        binding.eventTime.text = context?.getString(R.string.hour_minute, hour, minute) ?: ""
     }
 
     override fun showDatePickerDialog() {
-        DatePickerDialogStarter.startDatePicker(context, this)
+        context?.let { DatePickerDialogStarter.startDatePicker(it, this) }
     }
 
     override fun showTimePicker() {
-        TimePickerDialogStarter.startTimePicker(context, this)
+        context?.let { TimePickerDialogStarter.startTimePicker(it, this) }
     }
 
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-        Timber.d("Time set $hourOfDay, $minute")
         presenter.onTimeSet(hourOfDay, minute)
     }
 
@@ -96,26 +103,16 @@ class CreateCallEventView @JvmOverloads constructor(
         presenter.onDateSet(year, month, dayOfMonth)
     }
 
-    override fun showError(errorMessage: String) {
-        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun phoneNumber(): Flow<CharSequence> =
-        binding.receiverNumber.textChanges().skipInitialValue()
-
-    override fun receiverName(): Flow<CharSequence> =
-        binding.receiverName.textChanges().skipInitialValue()
-
     override fun showSuccessMessage() {
-        Toast.makeText(context, "You have successfully added an event", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun scheduleNotification(data: Data, delay: Long) {
-        NotificationScheduler.scheduleNotification(context, data, delay)
+        Toast.makeText(context, "Reminder set successfully", Toast.LENGTH_SHORT).show()
     }
 
     override fun onBack() {
-        onBackListener?.onBack(ScreenType.CALL)
+        onBackListener?.onBack(ScreenType.REMINDER)
+    }
+
+    override fun scheduleNotification(data: Data, delay: Long) {
+        context?.let { NotificationScheduler.scheduleNotification(it, data, delay) }
     }
 
     fun setOnBackListener(onBackListener: OnBackListener) {
