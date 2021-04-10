@@ -12,7 +12,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.work.Data
 import com.lek.parrot.R
 import com.lek.parrot.databinding.ViewCreateMessageEventBinding
-import com.lek.parrot.newevents.ui.CreateEventActivity
+import com.lek.parrot.events.ui.UpcomingEventsActivity
+import com.lek.parrot.newevents.domain.ScreenType
+import com.lek.parrot.newevents.ui.OnBackListener
 import com.lek.parrot.notification.NotificationScheduler
 import com.lek.parrot.shared.DatePickerDialogStarter
 import com.lek.parrot.shared.TimePickerDialogStarter
@@ -34,22 +36,26 @@ class CreateMessageEventView @JvmOverloads constructor(
     TimePickerDialog.OnTimeSetListener,
     DatePickerDialog.OnDateSetListener {
 
+    private var onBackListener: OnBackListener? = null
+
     @Inject
     lateinit var presenter: CreateMessageEventContract.Presenter
 
-    private val binding = ViewCreateMessageEventBinding.inflate(LayoutInflater.from(context), this, true)
-
-    private val activity: CreateEventActivity get() = context as CreateEventActivity
+    private val binding =
+        ViewCreateMessageEventBinding.inflate(LayoutInflater.from(context), this, true)
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-        (presenter as CreateMessageEventPresenter).attachToView(
-            this,
-            activity.lifecycle
-        )
+        requireNotNull(UpcomingEventsActivity.activityLifecycle).let {
+            (presenter as CreateMessageEventPresenter).attachToView(
+                this,
+                it
+            )
+        }
     }
 
-    override fun receiverNumber(): Flow<CharSequence> = binding.receiverNumber.textChanges().skipInitialValue()
+    override fun receiverNumber(): Flow<CharSequence> =
+        binding.receiverNumber.textChanges().skipInitialValue()
 
     override fun date(): Flow<Unit> = binding.eventDate.clicks()
 
@@ -102,11 +108,14 @@ class CreateMessageEventView @JvmOverloads constructor(
         Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
     }
 
-    override fun phoneNumber(): Flow<CharSequence> = binding.receiverNumber.textChanges().skipInitialValue()
+    override fun phoneNumber(): Flow<CharSequence> =
+        binding.receiverNumber.textChanges().skipInitialValue()
 
-    override fun receiverName(): Flow<CharSequence> = binding.receiverName.textChanges().skipInitialValue()
+    override fun receiverName(): Flow<CharSequence> =
+        binding.receiverName.textChanges().skipInitialValue()
 
-    override fun message(): Flow<CharSequence> = binding.eventMessage.textChanges().skipInitialValue()
+    override fun message(): Flow<CharSequence> =
+        binding.eventMessage.textChanges().skipInitialValue()
 
     override fun showSuccessMessage() {
         Toast.makeText(context, "You have successfully added an event", Toast.LENGTH_SHORT).show()
@@ -117,6 +126,10 @@ class CreateMessageEventView @JvmOverloads constructor(
     }
 
     override fun onBack() {
-        activity.onBackPressed()
+        onBackListener?.onBack(ScreenType.MESSAGE)
+    }
+
+    fun setOnBackListener(onBackListener: OnBackListener) {
+        this.onBackListener = onBackListener
     }
 }

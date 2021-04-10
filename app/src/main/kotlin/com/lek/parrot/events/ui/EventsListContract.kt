@@ -15,5 +15,7 @@ interface EventsListContract {
         fun showEmptyState(emptyStateMessage: String)
         fun openCallEvent(): Flow<Unit>
         fun startCreateCallEvent()
+        fun openReminderEvent()
+        fun openReminderEventClick(): Flow<Unit>
     }
 }

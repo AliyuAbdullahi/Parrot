@@ -38,6 +38,76 @@ sealed class CreateEventState {
         val name: String = "",
         val phoneNumber: String = ""
     ) : CreateEventState()
+
+    data class ReminderEvent(
+        val hour: Hour = ABSENT_VALUE,
+        val minute: Minute = ABSENT_VALUE,
+        val year: Year = DateUtil.currentYear(),
+        val month: Month = DateUtil.currentMonth(),
+        val dayOfMonth: DayOfMonth = DateUtil.currentDay(),
+        val message: String = ""
+    ) : CreateEventState()
+}
+
+fun CreateEventState.validateReminderEvent(): CreateEventState {
+    if (this !is CreateEventState.ReminderEvent) {
+        return CreateEventState.InvalidEventState
+    }
+
+    if (year > DateUtil.currentYear()) {
+        return CreateEventState.ReminderEvent(
+            hour,
+            minute,
+            year,
+            month,
+            dayOfMonth
+        )
+    }
+    if (hour.isAbsent() || minute.isAbsent()) {
+        return CreateEventState.EmptyTime
+    }
+
+    if (year.isAbsent() && !month.isAbsent() && DateUtil.currentMonth() > month) {
+        return CreateEventState.InvalidMonth
+    }
+
+    if (!year.isAbsent() && month.isAbsent()) {
+        return CreateEventState.InvalidMonth
+    }
+
+    if (!year.isAbsent() && year < DateUtil.currentYear()) {
+        return CreateEventState.InvalidYear
+    }
+
+    if (year.isAbsent() && month == DateUtil.currentMonth() && dayOfMonth < DateUtil.currentDay()) {
+        return CreateEventState.InvalidDay
+    }
+
+    if (year == DateUtil.currentYear() &&
+        month == DateUtil.currentMonth() &&
+        dayOfMonth == DateUtil.currentDay() &&
+        hour < DateUtil.currentHour()
+    ) {
+        return CreateEventState.InvalidTime
+    }
+
+    if (year == DateUtil.currentYear() &&
+        month == DateUtil.currentMonth() &&
+        dayOfMonth == DateUtil.currentDay() &&
+        hour == DateUtil.currentHour() &&
+        minute < DateUtil.currentMinute()
+    ) {
+        return CreateEventState.InvalidTime
+    }
+
+    return CreateEventState.ReminderEvent(
+        hour,
+        minute,
+        year,
+        month,
+        dayOfMonth,
+        message
+    )
 }
 
 fun CreateEventState.validateCallEvent(): CreateEventState {

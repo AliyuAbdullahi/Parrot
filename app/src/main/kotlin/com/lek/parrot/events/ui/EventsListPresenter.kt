@@ -21,6 +21,7 @@ class EventsListPresenter(
         observeEventList()
         observeCreateEventClick()
         observeOpenCallEventClick()
+        observeCreateReminderEventClick()
     }
 
     override fun onCreate() {
@@ -29,26 +30,39 @@ class EventsListPresenter(
     }
 
     private fun observeCreateEventClick() = viewModelScope.launch {
-        view.openMessageEvent().handleError(stringService.getString(R.string.error_occurred)).collect {
-            view.startCreateMessageEvent()
-        }
+        view.openMessageEvent()
+            .handleError(stringService.getString(R.string.error_occurred))
+            .collect {
+                view.startCreateMessageEvent()
+            }
+    }
+
+    private fun observeCreateReminderEventClick() = viewModelScope.launch {
+        view.openReminderEventClick()
+            .handleError(stringService.getString(R.string.error_occurred))
+            .collect {
+                view.openReminderEvent()
+            }
     }
 
     private fun observeOpenCallEventClick() = viewModelScope.launch {
-        view.openCallEvent().handleError(stringService.getString(R.string.error_occurred)).collect {
-            view.startCreateCallEvent()
-        }
+        view.openCallEvent()
+            .handleError(stringService.getString(R.string.error_occurred))
+            .collect {
+                view.startCreateCallEvent()
+            }
     }
 
     private fun observeEventList() = viewModelScope.launch {
-        interactor().handleError(stringService.getString(R.string.error_occurred)).collect { events ->
-            (events?.to<List<Event>>())?.let {
-                if (it.isEmpty()) {
-                    view.showEmptyState(stringService.getString(R.string.event_empty_state_message))
-                } else {
-                    view.showEvents(it)
+        interactor().handleError(stringService.getString(R.string.error_occurred))
+            .collect { events ->
+                (events?.to<List<Event>>())?.let {
+                    if (it.isEmpty()) {
+                        view.showEmptyState(stringService.getString(R.string.event_empty_state_message))
+                    } else {
+                        view.showEvents(it)
+                    }
                 }
             }
-        }
     }
 }

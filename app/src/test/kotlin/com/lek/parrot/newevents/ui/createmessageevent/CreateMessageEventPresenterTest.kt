@@ -1,9 +1,7 @@
-package com.lek.parrot.newevents.ui
+package com.lek.parrot.newevents.ui.createmessageevent
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
-import com.lek.parrot.newevents.ui.createmessageevent.CreateMessageEventContract
-import com.lek.parrot.newevents.ui.createmessageevent.CreateMessageEventPresenter
 import com.lek.parrot.shared.CreateEventInteractor
 import com.lek.parrot.shared.IStringService
 import io.mockk.every

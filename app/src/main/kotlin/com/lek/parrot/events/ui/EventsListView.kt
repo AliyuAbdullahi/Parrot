@@ -4,12 +4,14 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lek.parrot.databinding.ViewEventsListviewBinding
 import com.lek.parrot.events.ui.adapter.EventListAdapter
-import com.lek.parrot.newevents.ui.ICreateEventStarter
+import com.lek.parrot.newevents.domain.ScreenType
+import com.lek.parrot.newevents.ui.createreminderevent.CreateEventFragment
 import com.lek.parrot.shared.Event
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ActivityContext
@@ -28,10 +30,8 @@ class EventsListView @JvmOverloads constructor(
     @Inject
     lateinit var presenter: EventsListContract.Presenter
 
-    @Inject
-    lateinit var createEventStarter: ICreateEventStarter
-
-    private val binding = ViewEventsListviewBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding =
+        ViewEventsListviewBinding.inflate(LayoutInflater.from(context), this, true)
 
     private val eventClickedListener = { event: Event ->
         Toast.makeText(context, event.eventId, Toast.LENGTH_SHORT).show()
@@ -72,9 +72,22 @@ class EventsListView @JvmOverloads constructor(
 
     override fun openCallEvent(): Flow<Unit> = binding.createCallEvent.clicks()
 
-    override fun startCreateMessageEvent() = createEventStarter.startMessageEvent(context)
+    override fun startCreateMessageEvent() = CreateEventFragment.show(
+        (context as AppCompatActivity).supportFragmentManager,
+        ScreenType.MESSAGE
+    )
 
-    override fun startCreateCallEvent() = createEventStarter.startCallEvent(context)
+    override fun openReminderEventClick() = binding.createReminder.clicks()
+
+    override fun openReminderEvent() = CreateEventFragment.show(
+        (context as AppCompatActivity).supportFragmentManager,
+        ScreenType.REMINDER
+    )
+
+    override fun startCreateCallEvent() = CreateEventFragment.show(
+        (context as AppCompatActivity).supportFragmentManager,
+        ScreenType.CALL
+    )
 
     override fun setTitle(title: String) {
         binding.title.text = title

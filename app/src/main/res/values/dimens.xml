@@ -14,4 +14,6 @@
     <dimen name="miniElevation">4dp</dimen>
     <dimen name="tinyDp">0.5dp</dimen>
     <dimen name="cell_height">120dp</dimen>
+    <dimen name="largeCorner">24dp</dimen>
+    <dimen name="smallCorner">24dp</dimen>
 </resources>
